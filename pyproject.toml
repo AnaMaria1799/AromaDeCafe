@@ -1,0 +1,23 @@
+[project]
+name = "aroma-de-cafe"
+version = "0.1.0"
+description = "Ventas, inventario y abastecimiento de la cafetería Aroma de Café"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "--cov=aroma_cafe --cov-branch --cov-report=term-missing"
+
+[tool.coverage.report]
+fail_under = 85
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "B", "UP", "SIM", "C90"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.mypy]
+files = ["aroma_cafe"]
+strict = true

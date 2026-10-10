@@ -1,6 +1,7 @@
 from dataclasses import replace
 from datetime import date, datetime, timedelta
 from decimal import Decimal
+from unittest.mock import Mock
 
 from aroma_cafe.dominio.inventario import ArticuloInventario, UnidadMedida
 from aroma_cafe.dominio.recepcion import LoteRecepcion, Proveedor
@@ -76,3 +77,8 @@ def lote_de_leche(**cambios: object) -> LoteRecepcion:
         Decimal("4.0"),
     )
     return replace(valido, **cambios)
+
+
+def cargar_existencias(inventario_repo: Mock, *articulos: ArticuloInventario) -> None:
+    por_codigo = {articulo.codigo: articulo for articulo in articulos}
+    inventario_repo.obtener.side_effect = lambda codigo: por_codigo[codigo]

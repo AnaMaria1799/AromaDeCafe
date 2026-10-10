@@ -1,9 +1,11 @@
+from datetime import datetime
 from decimal import Decimal
 
 from aroma_cafe.datos.unidad_de_trabajo import UnidadDeTrabajo
 from aroma_cafe.dominio.excepciones import ExistenciaInsuficienteError
 from aroma_cafe.dominio.inventario import AlertaAbastecimiento
-from aroma_cafe.dominio.movimientos import SalidaInventario
+from aroma_cafe.dominio.movimientos import EntradaInventario, SalidaInventario
+from aroma_cafe.dominio.recepcion import LoteRecepcion
 from aroma_cafe.dominio.ventas import Venta
 
 
@@ -44,3 +46,13 @@ class ServicioInventario:
                     )
                 )
         return alertas
+
+    def sumar_entrada(self, lote: LoteRecepcion) -> EntradaInventario:
+        articulo = self._unidad.inventario.obtener(lote.articulo.codigo)
+        articulo.sumar(lote.cantidad)
+        self._unidad.inventario.guardar(articulo)
+        entrada = EntradaInventario(
+            datetime.now(), articulo.codigo, lote.cantidad, lote.responsable, lote
+        )
+        self._unidad.inventario.registrar_movimiento(entrada)
+        return entrada

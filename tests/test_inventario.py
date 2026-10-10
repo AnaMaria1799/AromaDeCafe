@@ -3,9 +3,9 @@ from decimal import Decimal
 import pytest
 
 from aroma_cafe.dominio.excepciones import ExistenciaInsuficienteError
-from aroma_cafe.dominio.movimientos import SalidaInventario
+from aroma_cafe.dominio.movimientos import EntradaInventario, SalidaInventario
 from aroma_cafe.servicios.inventario import ServicioInventario
-from tests.fabricas import VENTA, cafe, cargar_existencias, leche
+from tests.fabricas import VENTA, cafe, cargar_existencias, leche, lote_de_leche
 
 
 def test_no_se_puede_crear_el_servicio_sin_unidad_de_trabajo():
@@ -31,7 +31,6 @@ def test_verificar_disponibilidad_en_el_limite(
     else:
         with pytest.raises(ExistenciaInsuficienteError):
             inventario.verificar_disponibilidad({"CAF": Decimal(10)})
-
     inventario_repo.guardar.assert_not_called()
 
 
@@ -117,3 +116,21 @@ def test_el_bucle_descuenta_cada_consumo_del_pedido(inventario, inventario_repo)
 
     assert (grano.existencia, lacteo.existencia) == (Decimal(82), Decimal(800))
     assert inventario_repo.registrar_movimiento.call_count == 2
+
+
+def test_sumar_entrada_suma_y_registra_la_entrada(inventario, inventario_repo):
+    lacteo = leche(existencia=1000)
+    cargar_existencias(inventario_repo, lacteo)
+    lote = lote_de_leche()
+
+    entrada = inventario.sumar_entrada(lote)
+
+    assert lacteo.existencia == Decimal(6000)
+    assert isinstance(entrada, EntradaInventario)
+    assert (entrada.codigo_articulo, entrada.cantidad, entrada.lote) == (
+        "LEC",
+        Decimal(5000),
+        lote,
+    )
+    inventario_repo.guardar.assert_called_once_with(lacteo)
+    inventario_repo.registrar_movimiento.assert_called_once_with(entrada)

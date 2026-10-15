@@ -45,3 +45,6 @@ class ServicioVentas:
             self._unidad.ventas.guardar(venta)
             alertas = self._inventario.descontar_por_venta(venta, consumos)
         return VentaRegistrada(venta, tuple(alertas))
+
+    def historial(self) -> list[Venta]:
+        return self._unidad.ventas.listar()

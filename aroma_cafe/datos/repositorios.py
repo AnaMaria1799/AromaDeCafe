@@ -70,3 +70,6 @@ class RepositorioInventario:
     def revertir(self) -> None:
         self._pendientes.clear()
         self._movimientos.revertir()
+
+    def listar(self) -> list[ArticuloInventario]:
+        return [replace(articulo) for articulo in self._guardados.values()]

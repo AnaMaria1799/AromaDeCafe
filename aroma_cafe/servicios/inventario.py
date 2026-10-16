@@ -56,3 +56,9 @@ class ServicioInventario:
         )
         self._unidad.inventario.registrar_movimiento(entrada)
         return entrada
+
+    def existencias(self) -> dict[str, Decimal]:
+        return {
+            articulo.codigo: articulo.existencia
+            for articulo in self._unidad.inventario.listar()
+        }

@@ -76,3 +76,6 @@ class LoteRecepcion:
 
     def rechazado(self, motivo: str) -> "LoteRecepcion":
         return replace(self, estado=EstadoLote.RECHAZADO, motivo_rechazo=motivo)
+
+    def pendiente_de_devolucion(self) -> bool:
+        return self.estado is EstadoLote.RECHAZADO

@@ -29,3 +29,10 @@ class ServicioRecepcion:
                 registrado = lote.rechazado(motivo)
             self._unidad.recepciones.guardar(registrado)
         return registrado
+
+    def lotes_por_devolver(self) -> list[LoteRecepcion]:
+        return [
+            lote
+            for lote in self._unidad.recepciones.listar()
+            if lote.pendiente_de_devolucion()
+        ]

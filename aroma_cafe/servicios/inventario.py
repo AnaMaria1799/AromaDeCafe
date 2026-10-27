@@ -62,3 +62,10 @@ class ServicioInventario:
             articulo.codigo: articulo.existencia
             for articulo in self._unidad.inventario.listar()
         }
+
+    def insumos_por_reponer(self) -> list[str]:
+        return [
+            articulo.codigo
+            for articulo in self._unidad.inventario.listar()
+            if articulo.requiere_reposicion()
+        ]

@@ -135,3 +135,12 @@ def main() -> None:
     print(f"\nVentas en el historial: {len(ventas_repo.listar())}")
     print(f"Lotes registrados: {len(recepciones_repo.listar())}")
     print(f"Movimientos de inventario: {len(inventario_repo.movimientos())}")
+
+    print("\nINSUMOS POR REPONER")
+    for codigo in inventario.insumos_por_reponer():
+        insumo = inventario_repo.obtener(codigo)
+        cantidad = f"{insumo.existencia} {insumo.unidad.value}"
+        print(f"  {insumo.nombre}: quedan {cantidad} (mínimo {insumo.stock_minimo})")
+    print("\nLOTES PENDIENTES DE DEVOLUCIÓN")
+    for lote in recepcion.lotes_por_devolver():
+        print(f"  {lote.numero_lote}: {lote.motivo_rechazo}")

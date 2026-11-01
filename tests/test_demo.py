@@ -13,3 +13,8 @@ def test_la_demostracion_recorre_ventas_y_recepciones(capsys):
     assert "Lote L-102 rechazado: llegó a 25.5 °C y el máximo es 8 °C." in salida
     assert "Leche: 6400 ml" in salida
     assert "Ventas en el historial: 2" in salida
+
+    assert "Café en grano: quedan 196 g (mínimo 200)" in salida
+    assert "Alfajor: quedan 0 und (mínimo 0)" in salida
+    assert "Leche: quedan" not in salida
+    assert "L-102: llegó a 25.5 °C y el máximo es 8 °C" in salida

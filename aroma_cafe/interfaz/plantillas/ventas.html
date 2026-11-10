@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block contenido %}
+<h1>Registrar venta</h1>
+<p class="ayuda">Escribe la cantidad de cada producto, elige el medio de pago y confirma el pago.</p>
+
+{% for aviso in avisos %}
+  {% if aviso.startswith("Venta registrada") %}
+    <p class="aviso ok">{{ aviso }}</p>
+  {% elif aviso.startswith("Alerta") %}
+    <p class="aviso alerta">{{ aviso }}</p>
+  {% else %}
+    <p class="aviso error">{{ aviso }}</p>
+  {% endif %}
+{% endfor %}
+
+<form method="post" action="/ventas">
+  <div class="columnas">
+    <section class="tarjeta">
+      <h2>Productos</h2>
+      <label class="campo">Empleado
+        <select name="empleado">
+          {% for empleado in empleados %}
+            <option>{{ empleado }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <table>
+        <tr><th>Producto</th><th>Precio unitario</th><th>Cantidad</th></tr>
+        {% for producto in productos %}
+          <tr>
+            <td>{{ producto.nombre }}</td>
+            <td>${{ producto.precio }}</td>
+            <td><input type="number" name="{{ producto.codigo }}" value="0" min="0" aria-label="Cantidad de {{ producto.nombre }}"></td>
+          </tr>
+        {% endfor %}
+      </table>
+    </section>
+    <section class="tarjeta">
+      <h2>Medio de pago</h2>
+      {% for medio in medios %}
+        <label><input type="radio" name="medio" value="{{ medio.value }}" {% if loop.first %}checked{% endif %}> {{ medio.value|capitalize }}</label>
+      {% endfor %}
+      <h2>Confirmación de pago</h2>
+      <label><input type="checkbox" name="confirmado" value="si" onchange="document.getElementById('registrar').disabled = !this.checked"> El pago ha sido confirmado</label>
+    </section>
+  </div>
+  <div class="botones">
+    <a class="boton secundario" href="/ventas">Cancelar</a>
+    <button id="registrar" type="submit" disabled>Registrar Venta</button>
+  </div>
+</form>
+
+<h2>Ventas de hoy</h2>
+{% if historial %}
+  <table>
+    <tr><th>Hora</th><th>Productos</th><th>Valor</th><th>Medio de pago</th><th>Empleado</th></tr>
+    {% for venta in historial %}
+      <tr>
+        <td>{{ venta.fecha_hora.strftime("%H:%M") }}</td>
+        <td>{% for item in venta.items %}{{ item.cantidad }} {{ item.producto.nombre }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
+        <td>${{ venta.valor_total }}</td>
+        <td>{{ venta.medio_pago.value }}</td>
+        <td>{{ venta.empleado }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+{% else %}
+  <p>Todavía no hay ventas.</p>
+{% endif %}
+{% endblock %}

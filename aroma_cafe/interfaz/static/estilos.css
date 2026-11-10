@@ -1,0 +1,168 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: #2b1d14;
+  background: #ffffff;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px;
+  background: #6f4e37;
+  color: #ffffff;
+}
+
+.marca {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+nav a {
+  color: #ffffff;
+  font-weight: bold;
+  text-decoration: none;
+  margin: 0 6px;
+}
+
+nav a.activo {
+  border-bottom: 3px solid #d98e3b;
+}
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px 32px;
+}
+
+.ayuda {
+  color: #6b5d55;
+}
+
+.columnas {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.tarjeta {
+  flex: 1;
+  border: 1px solid #d8cfc8;
+  border-radius: 8px;
+  padding: 8px 20px 16px;
+}
+
+.formulario {
+  flex: 0 0 360px;
+}
+
+label {
+  display: block;
+  margin: 10px 0;
+}
+
+.campo input,
+.campo select {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 4px;
+}
+
+input,
+select {
+  font-size: 16px;
+  padding: 6px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+}
+
+th,
+td {
+  border: 1px solid #d8cfc8;
+  padding: 8px 10px;
+  text-align: left;
+}
+
+th {
+  background: #f3efec;
+}
+
+.botones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+button,
+.boton {
+  font-size: 16px;
+  padding: 10px 24px;
+  border: 1px solid #6f4e37;
+  border-radius: 6px;
+  background: #6f4e37;
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.boton.secundario {
+  background: #ffffff;
+  color: #6f4e37;
+}
+
+button:disabled {
+  background: #cfcfcf;
+  border-color: #cfcfcf;
+  cursor: not-allowed;
+}
+
+.aviso {
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin: 8px 0;
+}
+
+.ok {
+  background: #e3f3e6;
+  color: #1e6b2f;
+}
+
+.error {
+  background: #fdeaea;
+  color: #b3261e;
+}
+
+.alerta {
+  background: #fff4cc;
+  color: #6b4e00;
+}
+
+.estado {
+  padding: 4px 12px;
+  border-radius: 6px;
+}
+
+.normal {
+  background: #d7efdf;
+  color: #1e6b2f;
+}
+
+.reponer {
+  background: #f8d7d7;
+  color: #b3261e;
+}
+
+.motivo {
+  color: #b3261e;
+}
+
+.sin-corte {
+  white-space: nowrap;
+}

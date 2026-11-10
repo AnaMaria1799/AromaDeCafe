@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Aroma de Café</title>
+  <link rel="stylesheet" href="/static/estilos.css">
+</head>
+<body>
+  <header>
+    <span class="marca">☕ Aroma de Café</span>
+    <nav>
+      <a href="/ventas" {% if request.path in ["/", "/ventas"] %}class="activo"{% endif %}>Ventas</a> ·
+      <a href="/inventario" {% if request.path == "/inventario" %}class="activo"{% endif %}>Inventario</a> ·
+      <a href="/recepcion" {% if request.path == "/recepcion" %}class="activo"{% endif %}>Recepción</a>
+    </nav>
+  </header>
+  <main>
+    {% block contenido %}{% endblock %}
+  </main>
+</body>
+</html>

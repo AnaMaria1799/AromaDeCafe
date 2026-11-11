@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block contenido %}
+<h1>Inventario</h1>
+
+{% if por_reponer %}
+    <p class="aviso alerta">⚠ Insumos en el stock mínimo o por debajo: {{ por_reponer|join(", ") }}.</p>
+{% endif %}
+
+<table>
+    <tr>
+        <th>Código</th>
+        <th>Insumo</th>
+        <th>Existencia</th>
+        <th>Unidad</th>
+        <th>Stock mínimo</th>
+        <th>Estado</th>
+    </tr>
+    {% for articulo in articulos %}
+    <tr>
+        <td>{{ articulo.codigo }}</td>
+        <td>{{ articulo.nombre }}</td>
+        <td>{{ articulo.existencia }}</td>
+        <td>{{ articulo.unidad.value }}</td>
+        <td>{{ articulo.stock_minimo }}</td>
+        {% if articulo.requiere_reposicion() %}
+        <td><span class="estado reponer">Reponer</span></td>
+        {% else %}
+        <td><span class="estado normal">Normal</span></td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+<p class="ayuda">La existencia cambia sola con cada venta y con cada lote aceptado.</p>
+{% endblock %}

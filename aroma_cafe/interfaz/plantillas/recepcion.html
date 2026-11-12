@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block contenido %}
+<h1>Recepción de insumos</h1>
+
+{% if mensaje %}
+  <p class="aviso {% if 'aceptado' in mensaje %}ok{% else %}error{% endif %}">{{ mensaje }}</p>
+{% endif %}
+
+<div class="columnas">
+  <form method="post" action="/recepcion" class="tarjeta formulario">
+    <label class="campo">Insumo
+      <select name="insumo">
+        {% for articulo in articulos %}
+          <option value="{{ articulo.codigo }}">{{ articulo.nombre }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label class="campo">Cantidad <input type="number" name="cantidad"></label>
+    <label class="campo">Unidad
+      <select name="unidad">
+        {% for unidad in unidades %}
+          <option>{{ unidad.value }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label class="campo">Número de lote <input name="lote"></label>
+    <label class="campo">Fecha de vencimiento <input type="date" name="vencimiento"></label>
+    <label class="campo">Temperatura (°C) <input type="number" step="0.1" name="temperatura"></label>
+    <label class="campo">Proveedor: NIT <input name="nit"></label>
+    <label class="campo">Proveedor: nombre <input name="proveedor"></label>
+    <label class="campo">Número de factura <input name="factura"></label>
+    <label class="campo">Responsable
+      <select name="responsable">
+        {% for empleado in empleados %}
+          <option {% if empleado == "Juan" %}selected{% endif %}>{{ empleado }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <button type="submit">Registrar recepción</button>
+  </form>
+
+  <section class="tarjeta">
+    <h2>Lotes pendientes de devolución</h2>
+    {% if devoluciones %}
+      <table>
+        <tr><th>Lote</th><th>Insumo</th><th>Cantidad</th><th>Proveedor</th><th>Factura</th><th>Motivo</th></tr>
+        {% for lote in devoluciones %}
+          <tr>
+            <td class="sin-corte">{{ lote.numero_lote }}</td>
+            <td>{{ lote.articulo.nombre }}</td>
+            <td class="sin-corte">{{ lote.cantidad }} {{ lote.unidad.value }}</td>
+            <td>{{ lote.proveedor.nombre }}</td>
+            <td class="sin-corte">{{ lote.numero_factura }}</td>
+            <td class="motivo">{{ lote.motivo_rechazo }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <p>No hay lotes pendientes de devolución.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.8, pytest-9.1.1, pluggy-1.7.0 -- C:\Users\juanj\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\juanj\Desktop\Trabajo 5\AromaDeCafe
+configfile: pyproject.toml
+plugins: cov-7.1.0
+collecting ... collected 26 items
+
+tests/test_web_ventas.py::test_cf_001_01_dos_latte_en_efectivo PASSED    [  3%]
+tests/test_web_ventas.py::test_cf_001_02_un_latte_y_el_ultimo_alfajor_con_tarjeta PASSED [  7%]
+tests/test_web_ventas.py::test_cf_001_03_pedido_sin_productos PASSED     [ 11%]
+tests/test_web_ventas.py::test_cf_001_04_cantidad_negativa PASSED        [ 15%]
+tests/test_web_ventas.py::test_cf_001_05_piden_mas_alfajores_de_los_que_hay PASSED [ 19%]
+tests/test_web_ventas.py::test_cf_001_06_sin_confirmar_el_pago_no_se_registra PASSED [ 23%]
+tests/test_web_ventas.py::test_cf_001_07_solo_se_ofrecen_los_medios_habilitados PASSED [ 26%]
+tests/test_web_ventas.py::test_cf_001_08_el_historial_muestra_cada_venta_con_su_empleado PASSED [ 30%]
+tests/test_web_inventario.py::test_cf_005_01_la_venta_descuenta_segun_la_receta PASSED [ 34%]
+tests/test_web_inventario.py::test_cf_005_02_el_cafe_queda_por_debajo_del_minimo PASSED [ 38%]
+tests/test_web_inventario.py::test_cf_005_03_el_alfajor_queda_justo_en_el_minimo PASSED [ 42%]
+tests/test_web_inventario.py::test_cf_005_04_las_ventas_rechazadas_no_cambian_el_inventario PASSED [ 46%]
+tests/test_web_inventario.py::test_cf_005_05_dos_cajas_venden_el_ultimo_alfajor PASSED [ 50%]
+tests/test_web_inventario.py::test_cf_005_06_la_leche_alcanza_para_10_latte_y_no_para_11 PASSED [ 53%]
+tests/test_web_inventario.py::test_cf_005_07_insumos_por_reponer PASSED  [ 57%]
+tests/test_web_inventario.py::test_cf_005_08_la_existencia_no_se_puede_cambiar_a_mano PASSED [ 61%]
+tests/test_web_recepcion.py::test_cf_007_01_lote_de_leche_valido PASSED  [ 65%]
+tests/test_web_recepcion.py::test_cf_007_02_lote_de_cafe_sin_vencimiento_ni_temperatura PASSED [ 69%]
+tests/test_web_recepcion.py::test_cf_007_03_limites_que_se_aceptan PASSED [ 73%]
+tests/test_web_recepcion.py::test_cf_007_04_sin_proveedor_o_sin_factura PASSED [ 76%]
+tests/test_web_recepcion.py::test_cf_007_05_campos_vacios_del_lote PASSED [ 80%]
+tests/test_web_recepcion.py::test_cf_007_06_cantidad_cero_o_negativa PASSED [ 84%]
+tests/test_web_recepcion.py::test_cf_007_07_el_mismo_lote_dos_veces PASSED [ 88%]
+tests/test_web_recepcion.py::test_cf_007_08_limites_que_se_rechazan PASSED [ 92%]
+tests/test_web_recepcion.py::test_cf_007_09_lotes_pendientes_de_devolucion PASSED [ 96%]
+tests/test_web_recepcion.py::test_cf_007_10_unidad_que_no_corresponde_al_insumo PASSED [100%]
+
+============================= 26 passed in 0.97s ==============================

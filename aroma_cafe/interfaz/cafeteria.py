@@ -6,6 +6,7 @@ from aroma_cafe.datos.repositorios import (
     RepositorioRecepciones,
     RepositorioVentas,
 )
+from aroma_cafe.datos.respaldo import Respaldo
 from aroma_cafe.datos.unidad_de_trabajo import UnidadDeTrabajo
 from aroma_cafe.dominio.inventario import ArticuloInventario, UnidadMedida
 from aroma_cafe.dominio.ventas import LineaReceta, Producto
@@ -33,7 +34,7 @@ class Cafeteria:
     recepcion: ServicioRecepcion
 
 
-def abrir_cafeteria() -> Cafeteria:
+def abrir_cafeteria(respaldo: Respaldo | None = None) -> Cafeteria:
     cafe = ArticuloInventario(
         "CAF", "Café en grano", UnidadMedida.GRAMO, Decimal(250), Decimal(200)
     )
@@ -51,8 +52,11 @@ def abrir_cafeteria() -> Cafeteria:
         "ALF", "Alfajor", UnidadMedida.UNIDAD, Decimal(1), Decimal(0)
     )
     inventario_repo = RepositorioInventario([cafe, leche, alfajor])
+    recepciones_repo = RepositorioRecepciones()
+    if respaldo is not None:
+        respaldo.restaurar(inventario_repo, recepciones_repo)
     unidad = UnidadDeTrabajo(
-        RepositorioVentas(), inventario_repo, RepositorioRecepciones()
+        RepositorioVentas(), inventario_repo, recepciones_repo, respaldo
     )
     inventario = ServicioInventario(unidad)
     ventas = ServicioVentas(inventario, unidad)

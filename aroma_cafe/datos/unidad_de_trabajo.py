@@ -40,7 +40,7 @@ class UnidadDeTrabajo:
         self.inventario.confirmar()
         self.recepciones.confirmar()
         if self.respaldo is not None:
-            self.respaldo.guardar(self.inventario, self.recepciones)
+            self.respaldo.guardar(self.inventario, self.recepciones, self.ventas)
 
     def revertir(self) -> None:
         self.ventas.revertir()

@@ -5,6 +5,7 @@ from aroma_cafe.datos.repositorios import (
     RepositorioRecepciones,
     RepositorioVentas,
 )
+from aroma_cafe.datos.respaldo import Respaldo
 
 
 class UnidadDeTrabajo:
@@ -13,10 +14,12 @@ class UnidadDeTrabajo:
         ventas: RepositorioVentas,
         inventario: RepositorioInventario,
         recepciones: RepositorioRecepciones,
+        respaldo: Respaldo | None = None,
     ) -> None:
         self.ventas = ventas
         self.inventario = inventario
         self.recepciones = recepciones
+        self.respaldo = respaldo
 
     def __enter__(self) -> "UnidadDeTrabajo":
         return self
@@ -36,6 +39,8 @@ class UnidadDeTrabajo:
         self.ventas.confirmar()
         self.inventario.confirmar()
         self.recepciones.confirmar()
+        if self.respaldo is not None:
+            self.respaldo.guardar(self.inventario, self.recepciones)
 
     def revertir(self) -> None:
         self.ventas.revertir()

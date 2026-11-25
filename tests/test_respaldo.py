@@ -2,7 +2,7 @@ from datetime import date, timedelta
 
 from aroma_cafe.datos.respaldo import Respaldo
 from aroma_cafe.interfaz.web import crear_app
-from tests.pantallas import texto, ver
+from tests.pantallas import texto, vender, ver
 
 
 def abrir_con_respaldo(ruta):
@@ -77,3 +77,26 @@ def test_una_recepcion_no_registrada_no_crea_respaldo(tmp_path):
     recibir(abrir_con_respaldo(ruta), factura="")
 
     assert not ruta.exists()
+
+
+def test_la_venta_y_su_descuento_se_recuperan_al_abrir_de_nuevo(tmp_path):
+    ruta = tmp_path / "aroma_cafe.json"
+    vender(abrir_con_respaldo(ruta), latte=2, empleado="Cristina")
+
+    cliente = abrir_con_respaldo(ruta)
+
+    assert "2 Latte $13000 efectivo Cristina" in ver(cliente, "/ventas")
+    assert "CAF Café en grano 214 g 200 Normal" in ver(cliente, "/inventario")
+    assert "LEC Leche 1600 ml 500 Normal" in ver(cliente, "/inventario")
+
+
+def test_una_venta_rechazada_no_queda_en_el_respaldo(tmp_path):
+    ruta = tmp_path / "aroma_cafe.json"
+    cliente = abrir_con_respaldo(ruta)
+    vender(cliente, latte=1)
+
+    vender(cliente, alfajor=2)
+
+    nuevo = abrir_con_respaldo(ruta)
+    assert "1 Latte $6500 efectivo Ana" in ver(nuevo, "/ventas")
+    assert "ALF Alfajor 1 und 0 Normal" in ver(nuevo, "/inventario")

@@ -1,12 +1,18 @@
 import json
-from datetime import date
+from collections.abc import Iterable
+from datetime import date, datetime
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
-from aroma_cafe.datos.repositorios import RepositorioInventario, RepositorioRecepciones
+from aroma_cafe.datos.repositorios import (
+    RepositorioInventario,
+    RepositorioRecepciones,
+    RepositorioVentas,
+)
 from aroma_cafe.dominio.inventario import UnidadMedida
 from aroma_cafe.dominio.recepcion import EstadoLote, LoteRecepcion, Proveedor
+from aroma_cafe.dominio.ventas import ItemPedido, MedioPago, Producto, Venta
 
 
 class Respaldo:
@@ -14,7 +20,10 @@ class Respaldo:
         self.ruta = ruta
 
     def guardar(
-        self, inventario: RepositorioInventario, recepciones: RepositorioRecepciones
+        self,
+        inventario: RepositorioInventario,
+        recepciones: RepositorioRecepciones,
+        ventas: RepositorioVentas,
     ) -> None:
         datos = {
             "existencias": {
@@ -22,13 +31,18 @@ class Respaldo:
                 for articulo in inventario.listar()
             },
             "recepciones": [lote_a_datos(lote) for lote in recepciones.listar()],
+            "ventas": [venta_a_datos(venta) for venta in ventas.listar()],
         }
         self.ruta.parent.mkdir(parents=True, exist_ok=True)
         texto = json.dumps(datos, ensure_ascii=False, indent=2)
         self.ruta.write_text(texto, encoding="utf-8")
 
     def restaurar(
-        self, inventario: RepositorioInventario, recepciones: RepositorioRecepciones
+        self,
+        inventario: RepositorioInventario,
+        recepciones: RepositorioRecepciones,
+        ventas: RepositorioVentas,
+        productos: Iterable[Producto],
     ) -> None:
         if not self.ruta.exists():
             return
@@ -39,8 +53,12 @@ class Respaldo:
             inventario.guardar(articulo)
         for guardado in datos["recepciones"]:
             recepciones.guardar(datos_a_lote(guardado, inventario))
+        catalogo = {producto.codigo: producto for producto in productos}
+        for guardada in datos["ventas"]:
+            ventas.guardar(datos_a_venta(guardada, catalogo))
         inventario.confirmar()
         recepciones.confirmar()
+        ventas.confirmar()
 
 
 def lote_a_datos(lote: LoteRecepcion) -> dict[str, Any]:
@@ -81,4 +99,31 @@ def datos_a_lote(
         temperatura=Decimal(temperatura) if temperatura is not None else None,
         estado=EstadoLote(datos["estado"]),
         motivo_rechazo=datos["motivo_rechazo"],
+    )
+
+
+def venta_a_datos(venta: Venta) -> dict[str, Any]:
+    return {
+        "fecha_hora": venta.fecha_hora.isoformat(),
+        "empleado": venta.empleado,
+        "items": [
+            {"producto": item.producto.codigo, "cantidad": item.cantidad}
+            for item in venta.items
+        ],
+        "valor_total": str(venta.valor_total),
+        "medio_pago": venta.medio_pago.value,
+    }
+
+
+def datos_a_venta(datos: dict[str, Any], catalogo: dict[str, Producto]) -> Venta:
+    items = tuple(
+        ItemPedido(catalogo[item["producto"]], item["cantidad"])
+        for item in datos["items"]
+    )
+    return Venta(
+        fecha_hora=datetime.fromisoformat(datos["fecha_hora"]),
+        empleado=datos["empleado"],
+        items=items,
+        valor_total=Decimal(datos["valor_total"]),
+        medio_pago=MedioPago(datos["medio_pago"]),
     )

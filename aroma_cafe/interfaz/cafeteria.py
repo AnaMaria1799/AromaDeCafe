@@ -53,11 +53,10 @@ def abrir_cafeteria(respaldo: Respaldo | None = None) -> Cafeteria:
     )
     inventario_repo = RepositorioInventario([cafe, leche, alfajor])
     recepciones_repo = RepositorioRecepciones()
+    ventas_repo = RepositorioVentas()
     if respaldo is not None:
-        respaldo.restaurar(inventario_repo, recepciones_repo)
-    unidad = UnidadDeTrabajo(
-        RepositorioVentas(), inventario_repo, recepciones_repo, respaldo
-    )
+        respaldo.restaurar(inventario_repo, recepciones_repo, ventas_repo, PRODUCTOS)
+    unidad = UnidadDeTrabajo(ventas_repo, inventario_repo, recepciones_repo, respaldo)
     inventario = ServicioInventario(unidad)
     ventas = ServicioVentas(inventario, unidad)
     recepcion = ServicioRecepcion(inventario, unidad)

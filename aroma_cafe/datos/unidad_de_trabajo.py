@@ -1,3 +1,4 @@
+from threading import Lock
 from types import TracebackType
 
 from aroma_cafe.datos.repositorios import (
@@ -20,8 +21,10 @@ class UnidadDeTrabajo:
         self.inventario = inventario
         self.recepciones = recepciones
         self.respaldo = respaldo
+        self._turno = Lock()
 
     def __enter__(self) -> "UnidadDeTrabajo":
+        self._turno.acquire()
         return self
 
     def __exit__(
@@ -30,10 +33,13 @@ class UnidadDeTrabajo:
         error: BaseException | None,
         traza: TracebackType | None,
     ) -> None:
-        if tipo_error is None:
-            self.confirmar()
-        else:
-            self.revertir()
+        try:
+            if tipo_error is None:
+                self.confirmar()
+            else:
+                self.revertir()
+        finally:
+            self._turno.release()
 
     def confirmar(self) -> None:
         self.ventas.confirmar()
